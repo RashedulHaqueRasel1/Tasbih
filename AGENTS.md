@@ -39,3 +39,14 @@ Docs: https://docs.expo.dev/eas/index.md
 - If `ios/` and `android/` directories do not exist, they are generated (Continuous Native Generation). Never create or edit them by hand — configure native behavior in `app.json` and config plugins.
 - Expo Go only includes its bundled native modules. After adding a library with native code, the app needs a development build: `npx expo run:ios|android` locally, or `eas build --profile development`.
 - Prefer recommended Expo modules over third-party libraries, and check your available skills before adding dependencies. Docs: https://docs.expo.dev/versions/latest/index.md
+
+## Project architecture (Tasbih)
+
+Feature-based layout, see README.md "Architecture" for details.
+
+- `src/app/`: thin Expo Router files only, re-export screens from `@/features/<name>`.
+- `src/features/<name>/`: self-contained feature (screens, components, store, hooks, data, utils) with a public `index.ts`.
+- `src/shared/`: feature-agnostic UI, theme, hooks, storage, i18n, utils. Never imports from `features/`.
+- Import a feature only through `@/features/<name>`, never its internals (ESLint enforces this).
+- Colors come from `useTheme()`; no hardcoded hex in components. Files are kebab-case.
+- Run `npm run validate` (typecheck + lint + format check) before finishing a task.
